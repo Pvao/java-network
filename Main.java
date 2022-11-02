@@ -1,42 +1,26 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.util.*;
 
 public class Main {
-
-
-    public static void main(String[] args) throws SocketException, UnknownHostException {
-
-        // getNetworkInterfaces() вернусь список всех интерфейсов
-        ArrayList<NetworkInterface> interfaces = Collections.list(
-                NetworkInterface.getNetworkInterfaces());
-
-        System.out.println("Информация о сетевых интерфейсах...\n");
-        System.out.println("Поднятые интерфейсы:");
-        for (NetworkInterface iface : interfaces) {
-            if (iface.isUp()) {
-                // getName() method
-                System.out.println("Имя интерфейса: " + iface.getName());
-                // getDisplayName() method
-                System.out.println("Отображаемое имя интерфейса: " + iface.getDisplayName());
-                // isLoopback() method
-                System.out.println("\tloopback: " + iface.isLoopback());
-                // isVirtual() method
-                System.out.println("\tvirtual: " + iface.isVirtual() + "\n");
-            }
-        }
-        System.out.println("Не поднятые интерфейсы:");
-
-        for (NetworkInterface iface : interfaces) {
-            if (!iface.isUp()) {
-                // getName() method
-                System.out.println("Имя интерфейса: " + iface.getName());
-                // getDisplayName() method
-                System.out.println("Отображаемое имя интерфейса: " + iface.getDisplayName());
-                // isLoopback() method   !!!!
-                System.out.println("\tloopback: " + iface.isLoopback());
-                // isVirtual() method  !!!!!
-                System.out.println("\tvirtual: " + iface.isVirtual() + "\n");
-            }
+    public static void main(String[] args) throws Exception {
+        Scanner in_url  =new Scanner(System.in);
+        System.out.println("URL:");
+        String user_URL  = in_url.nextLine();
+        URL address = new URL(user_URL);
+        try {
+            URLConnection connection = address.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            System.out.println("***Соединение установлено***");
+            System.out.println("Размер ресурса в байтах - " + connection.getContentLength());
+            System.out.println("Тип содержимого в запросе - " + connection.getContentType());
+            String inputLine;
+            while ((inputLine = in.readLine()) != null)
+                System.out.println(inputLine);
+            in.close();
+        }catch (Exception e) {
+            System.out.println("***Соединение не установлено***");
         }
     }
 }
