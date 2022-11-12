@@ -3,4 +3,7 @@
 /workspace.xml
 target/
 .idea
+*.iws
+*.iml
+*.ipr
 out
