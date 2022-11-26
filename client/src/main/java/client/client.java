@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
-
 public class client {
     public static void main(String[] args) throws IOException {
         try {
