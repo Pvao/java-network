@@ -1,49 +1,51 @@
 package client;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.Scanner;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import java.nio.charset.StandardCharsets;
 
 
 public class client {
-    public static void main(String[] args) throws IOException {
+
+    public static String Msg;
+    public static void main(String[] args) {
+
+        var eventLoopGroup = new NioEventLoopGroup(4);
+
+
+        var bootstrap = new Bootstrap();
+        bootstrap.group(eventLoopGroup)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.TCP_NODELAY,true)
+                .handler(new ClientChannelInitializer());
+
         try {
-            System.out.println("Server address:");
-            Scanner userAddress = new Scanner(System.in);
-            String Address = userAddress.nextLine();
-            System.out.println("Server port:");
-            Scanner userPort = new Scanner(System.in);
-            int Port = userPort.nextInt();
+            int i = 1;
+            while (i<=3){
+                switch (i)
+                {case 1: Msg = "5:hello"; break;
+                    case 2: Msg = "4:cool";  break;
+                    case 3: Msg = "6:haha";  break;
+                    default: Msg = null;  break;
+                };
+                var channelFuture = bootstrap.connect("localhost", 8081).sync();
+                channelFuture.channel().closeFuture().sync();
+                //   channelFuture.closeFuture();
+                //      System.out.println(i);
+                //System.out.println(textMsg.getMsg());
 
-            var client = SocketChannel.open(new InetSocketAddress(Address, Port));
-            var buffer = ByteBuffer.wrap("Hello".getBytes());
-            client.write(buffer);
-            buffer.clear();
-            client.read(buffer);
-            var response = new String(buffer.array()).trim();
-            System.out.println("Response: " + response);
-            buffer.clear();
-            //  client.close();
-
-            if (response!=null) {
-                //  client = SocketChannel.open(new InetSocketAddress(Address, Port));
-
-                var  buffer2 = ByteBuffer.wrap("Stop".getBytes());
-                client.write(buffer2);
-                //client.read(buffer);
-                // response = new String(buffer.array()).trim();
-                //  System.out.println("Response: " + response);
-                buffer2.clear();
-                client.close();
-            } else {
-                System.out.println("the answer is not correct");
-            };
-
-
-        }catch (Exception e) {
-            System.out.println("Error");
+                i++;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            eventLoopGroup.shutdownGracefully();
         }
+
     }
 }

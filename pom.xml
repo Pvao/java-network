@@ -17,6 +17,17 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven-assembly-plugin.version>3.4.2</maven-assembly-plugin.version>
+
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.85.Final</version>
+        </dependency>
+    </dependencies>
 
 </project>
